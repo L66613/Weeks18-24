@@ -55,7 +55,7 @@ public class AuthorServiceImpl implements AuthorService {
             return authorDto;
         } else {
             log.error("Author with name {} not found", name);
-            throw new NoSuchElementException("Not value found");
+            throw new NoSuchElementException("No value found");
         }
     }
 //    @Override
