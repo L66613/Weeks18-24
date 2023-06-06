@@ -99,15 +99,15 @@ public class AuthorServiceImpl implements AuthorService {
                 return criteriaBuilder.equal(root.get("name"), name);
             }
         });
-        log.info("Try to find author by name {}, name");
+        log.info("Try to find author by name {}", name);
         Optional<Author> author = authorRepository.findOne(specification);
         if(author.isPresent()){
             AuthorDto authorDto = convertEntityToDto(author.get());
-            log.info("Author: {}", authorDto.toString());
+            log.info("Author: {}", name, authorDto.toString());
             return authorDto;
         }else{
             log.error("Author with name {} not found", name);
-            throw new NoSuchElementException(name);
+            throw new IllegalStateException("Author not found");
         }
     }
 //    @Override
@@ -116,38 +116,16 @@ public class AuthorServiceImpl implements AuthorService {
 //        AuthorDto authorDto = convertEntityToDto(author);
 //        return authorDto;
 //    }
-//    @Override
-//    public AuthorDto createAuthor(AuthorCreateDto authorCreateDto) {
-//        log.info("Try to create author");
-//        Optional<Author> author = authorRepository.findAuthorByName(toString());
-//        if(author.isEmpty()) {
-//            Author author1 = authorRepository.save(convertDtoToEntity(authorCreateDto));
-//            AuthorDto authorDto = convertEntityToDto(author1);
-//            log.info("Author: {}", author1.toString());
-//            return authorDto;
-//        }else{
-//            log.error("Author with this name already exists");
-//            throw new NoSuchElementException("No value present");
-//        }
-//    }
+
     @Override
     public AuthorDto createAuthor(AuthorCreateDto authorCreateDto) {
-        log.info("Try to create an author");
-        Author author = authorRepository.findAuthorByName(authorCreateDto.getName()).orElse(null);
-        if(author == null) {
-            Author author1 = Author.builder()
-                    .name(authorCreateDto.getName())
-                    .surname(authorCreateDto.getSurname())
-                    .build();
-            author1 = authorRepository.save(author1);
-            AuthorDto authorDto = convertEntityToDto(author1);
-            log.info("Author: {}", authorCreateDto + " created");
-            return authorDto;
-        }else{
-            log.error("Author with this name already exists");
-            throw new NoSuchElementException("No value present");
-        }
+        log.info("Try to create an author", authorCreateDto.toString());
+        Author author = authorRepository.save(convertDtoToEntity(authorCreateDto));
+        AuthorDto authorDto = convertEntityToDto(author);
+        log.info("Author: {}", authorDto.toString() + " created");
+        return authorDto;
     }
+
 //    @Override
 //    public AuthorDto updateAuthor(AuthorUpdateDto authorUpdateDto) {
 //        Author author = authorRepository.findById(authorUpdateDto.getId()).orElseThrow();
@@ -160,11 +138,12 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public AuthorDto updateAuthor(AuthorUpdateDto authorUpdateDto) {
         log.info("Try to update an author");
-        Author author = authorRepository.findById(authorUpdateDto.getId()).orElse(null);
-        if (author != null) {
-            author.setName(authorUpdateDto.getName());
-            author.setSurname(authorUpdateDto.getSurname());
-            Author savedAuthor = authorRepository.save(author);
+        Optional<Author> author = authorRepository.findById(authorUpdateDto.getId());
+        if (author.isPresent()) {
+            Author author1 = author.get();
+            author1.setName(authorUpdateDto.getName());
+            author1.setSurname(authorUpdateDto.getSurname());
+            Author savedAuthor = authorRepository.save(author1);
             AuthorDto authorDto = convertEntityToDto(savedAuthor);
             log.info("Author: {}", " updated to " + authorUpdateDto);
             return authorDto;
@@ -180,7 +159,7 @@ public class AuthorServiceImpl implements AuthorService {
 //    }
     @Override
     public List<AuthorDto> getAllAuthors() {
-        log.info("Try to find all authors");
+        log.info("Try to get all authors");
         List<Author> authors = authorRepository.findAll();
         if (authors != null){
             return authors.stream().map(this::convertEntityToDto).collect(Collectors.toList());
@@ -189,22 +168,11 @@ public class AuthorServiceImpl implements AuthorService {
             throw new NoSuchElementException("No value present");
         }
     }
-//    @Override
-//    public void deleteAuthor(Long id) {
-//        authorRepository.deleteById(id);
-//    }
+
     @Override
     public void deleteAuthor(Long id) {
         log.info("Try to delete an author by id {}", id);
-        Optional<Author> author = authorRepository.findById(id);
-        if (author.isPresent()){
-            AuthorDto authorDto = convertEntityToDto(author.get());
-            authorRepository.deleteById(id);
-            log.info("Author: {}", authorDto.toString() + " was deleted");
-        }else{
-            log.error("Author with id {} not found", id);
-            throw new NoSuchElementException("No value present");
-        }
+        authorRepository.deleteById(id);
     }
     private Author convertDtoToEntity(AuthorCreateDto authorCreateDto) {
         return Author.builder()
@@ -232,21 +200,5 @@ public class AuthorServiceImpl implements AuthorService {
                 .books(bookDtoList)
                 .build();
         return authorDto;
-    }
-    private AuthorDto convertToDto(Author author) {
-        List<BookDto> bookDtoList = author.getBooks()
-                .stream()
-                .map(book -> BookDto.builder()
-                        .genre(book.getGenre().getName())
-                        .name(book.getName())
-                        .id(book.getId())
-                        .build()
-                ).toList();
-        return AuthorDto.builder()
-                .books(bookDtoList)
-                .id(author.getId())
-                .name(author.getName())
-                .surname(author.getSurname())
-                .build();
     }
 }

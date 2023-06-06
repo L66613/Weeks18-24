@@ -5,22 +5,25 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
+import ru.itgirl.libraryproject18n.dto.AuthorCreateDto;
 import ru.itgirl.libraryproject18n.dto.AuthorDto;
+import ru.itgirl.libraryproject18n.dto.AuthorUpdateDto;
 import ru.itgirl.libraryproject18n.model.Author;
 import ru.itgirl.libraryproject18n.model.Book;
 import ru.itgirl.libraryproject18n.repository.AuthorRepository;
 
 import java.util.*;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
 public class AuthorServiceTest {
     @Mock
-    private AuthorRepository authorRepository;
+    AuthorRepository authorRepository;
     @InjectMocks
-    private AuthorServiceImpl authorService;
+    AuthorServiceImpl authorService;
 
     @Test
     public void testGetAuthorById(){
@@ -59,6 +62,15 @@ public class AuthorServiceTest {
     }
 
     @Test
+    public void testGetAuthorByNameNotFound(){
+        String name = "John";
+        when(authorRepository.findAuthorByName(name)).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(NoSuchElementException.class, () -> authorService.getAuthorByName(name));
+        verify(authorRepository).findAuthorByName(name);
+    }
+
+    @Test
     public void testGetAuthorByNameSql(){
         Long id = 1L;
         String name = "John";
@@ -74,32 +86,79 @@ public class AuthorServiceTest {
         Assertions.assertEquals(authorDto.getName(), author.getName());
         Assertions.assertEquals(authorDto.getSurname(), author.getSurname());
     }
+    @Test
+    public void testGetAuthorByNameSqlNotFound(){
+        String name = "John";
+        when(authorRepository.findAuthorByNameSql(name)).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(NoSuchElementException.class, () -> authorService.getAuthorByNameSql(name));
+        verify(authorRepository).findAuthorByNameSql(name);
+    }
 
     @Test
-    public void testGetAuthorByNameV2(){
+    public void testGetAllAuthors(){
         Long id = 1L;
         String name = "John";
         String surname = "Doe";
         Set<Book> books = new HashSet<>();
         Author author = new Author(id, name, surname, books);
-
-    }
-    @Test
-    public void testGetAllAuthors(){
-        List<Author> authors = new ArrayList<>();
-        authors.add(Author.builder().id(1L).name("John").surname("Doe").build());
-
+        List<Author> authors = Arrays.asList(author);
         when(authorRepository.findAll()).thenReturn(authors);
+        List<AuthorDto> authorDtoList = authorService.getAllAuthors();
+
+        verify(authorRepository).findAll();
+        Assertions.assertNotNull(authorDtoList);
+        Assertions.assertEquals(authors.size(), authorDtoList.size());
+        AuthorDto authorDto = authorDtoList.get(0);
+        Assertions.assertEquals(author.getId(), authorDto.getId());
+        Assertions.assertEquals(author.getName(), authorDto.getName());
+        Assertions.assertEquals(author.getSurname(), authorDto.getSurname());
     }
 
     @Test
     public void testCreateAuthor(){
+        AuthorCreateDto authorCreation = new AuthorCreateDto("John", "Doe");
+        Set<Book> books = new HashSet<>();
+        Author author = new Author(1L, authorCreation.getName(), authorCreation.getSurname(), books);
 
+        when(authorRepository.save(any(Author.class))).thenReturn(author);
+
+        AuthorDto authorDto = authorService.createAuthor(authorCreation);
+
+        verify(authorRepository).save(any(Author.class));
+
+        Assertions.assertNotNull(authorDto);
+        Assertions.assertEquals(author.getId(), authorDto.getId());
+        Assertions.assertEquals(author.getName(), authorDto.getName());
+        Assertions.assertEquals(author.getSurname(), authorDto.getSurname());
     }
 
     @Test
     public void testUpdateAuthor(){
+        Long id = 1L;
+        String name = "John";
+        String surname = "Doe";
+        Set<Book> books = new HashSet<>();
+        AuthorUpdateDto authorUpdateDto = new AuthorUpdateDto(id, "Jane", "Austine");
+        Author author = new Author(id, name, surname, books);
+        when(authorRepository.findById(id)).thenReturn(Optional.of(author));
+        when(authorRepository.save(author)).thenReturn(author);
 
+        AuthorDto authorDto = authorService.updateAuthor(authorUpdateDto);
+        verify(authorRepository).findById(id);
+        verify(authorRepository).save(author);
+        Assertions.assertNotNull(authorDto);
+        Assertions.assertEquals(authorUpdateDto.getId(), authorDto.getId());
+        Assertions.assertEquals(authorUpdateDto.getName(), authorDto.getName());
+        Assertions.assertEquals(authorUpdateDto.getSurname(), authorDto.getSurname());
+    }
+
+    @Test
+    public void testDeleteAuthor(){
+        Long id = 1L;
+
+        authorService.deleteAuthor(id);
+        verify(authorRepository).deleteById(id);
     }
 
     @Test
