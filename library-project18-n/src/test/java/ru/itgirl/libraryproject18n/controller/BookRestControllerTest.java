@@ -1,26 +1,20 @@
 package ru.itgirl.libraryproject18n.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import ru.itgirl.libraryproject18n.dto.*;
 import ru.itgirl.libraryproject18n.model.Genre;
-import ru.itgirl.libraryproject18n.service.BookService;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-@Transactional
 @AutoConfigureMockMvc(addFilters = false)
 public class BookRestControllerTest {
     @Autowired
@@ -28,9 +22,6 @@ public class BookRestControllerTest {
 
     @Autowired
     private ObjectMapper mapper;
-
-    @MockBean
-    BookService bookService;
 
     @Test
     public void testGetBookByNameV1() throws Exception{
@@ -81,6 +72,7 @@ public class BookRestControllerTest {
     public void testCreateBook() throws Exception{
         BookCreateDto bookCreation = new BookCreateDto();
         Genre genre = new Genre("Fantasy");
+
         bookCreation.setName("The Witcher");
         bookCreation.setGenre(genre);
 
@@ -90,12 +82,12 @@ public class BookRestControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(bookCreation.getName()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.genre").value(genre));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.genre").value(genre.getName().toString()));
     }
 
     @Test
     public void testUpdateBook() throws Exception{
-        Long id = 1L;
+        Long id = 2L;
         String name = "The Witcher";
         String genre = "Fantasy";
         BookUpdateDto bookUpdateDto = new BookUpdateDto();

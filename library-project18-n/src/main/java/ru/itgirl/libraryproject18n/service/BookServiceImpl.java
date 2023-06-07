@@ -6,7 +6,6 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import ru.itgirl.libraryproject18n.dto.BookCreateDto;
@@ -124,7 +123,7 @@ public class BookServiceImpl implements BookService {
         book.setGenre(genre);
         book = bookRepository.save(book);
         BookDto bookDto = convertEntityToDto(book);
-        log.info("Book: {}", bookCreateDto + " created ");
+        log.info("Book: {}", bookDto.toString() + " created ");
         return bookDto;
     }
 

@@ -10,13 +10,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import ru.itgirl.libraryproject18n.dto.AuthorCreateDto;
 import ru.itgirl.libraryproject18n.dto.AuthorDto;
-import ru.itgirl.libraryproject18n.dto.AuthorUpdateDto;
 import ru.itgirl.libraryproject18n.service.AuthorService;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
