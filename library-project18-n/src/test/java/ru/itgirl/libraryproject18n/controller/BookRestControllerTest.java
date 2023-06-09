@@ -24,7 +24,7 @@ public class BookRestControllerTest {
     private ObjectMapper mapper;
 
     @Test
-    public void testGetBookByNameV1() throws Exception{
+    public void testGetBookByNameV1() throws Exception {
         BookDto bookDto = new BookDto();
         String bookName = "Война и мир";
         bookDto.setId(1L);
@@ -39,7 +39,7 @@ public class BookRestControllerTest {
     }
 
     @Test
-    public void testGetBookByNameV2() throws Exception{
+    public void testGetBookByNameV2() throws Exception {
         BookDto bookDto = new BookDto();
         String bookName = "Война и мир";
         bookDto.setId(1L);
@@ -54,7 +54,7 @@ public class BookRestControllerTest {
     }
 
     @Test
-    public void testGetBookByNameV3() throws Exception{
+    public void testGetBookByNameV3() throws Exception {
         BookDto bookDto = new BookDto();
         String bookName = "Война и мир";
         bookDto.setId(1L);
@@ -69,7 +69,7 @@ public class BookRestControllerTest {
     }
 
     @Test
-    public void testCreateBook() throws Exception{
+    public void testCreateBook() throws Exception {
         BookCreateDto bookCreation = new BookCreateDto();
         Genre genre = new Genre("Fantasy");
 
@@ -86,7 +86,7 @@ public class BookRestControllerTest {
     }
 
     @Test
-    public void testUpdateBook() throws Exception{
+    public void testUpdateBook() throws Exception {
         Long id = 2L;
         String name = "The Witcher";
         String genre = "Fantasy";
@@ -96,16 +96,16 @@ public class BookRestControllerTest {
         bookUpdateDto.setGenre(genre);
 
         mockMvc.perform(MockMvcRequestBuilders.put("/book/update")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(bookUpdateDto))
-                .accept(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(bookUpdateDto))
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(name))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.genre").value(genre));
     }
 
     @Test
-    public void testDeleteBook() throws Exception{
+    public void testDeleteBook() throws Exception {
         Long id = 1L;
         mockMvc.perform(MockMvcRequestBuilders.delete("/book/delete/{id}", id))
                 .andExpect(status().isOk());

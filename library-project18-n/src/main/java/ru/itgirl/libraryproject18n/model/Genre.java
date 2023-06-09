@@ -29,7 +29,7 @@ public class Genre {
         return "Genre{" + " name='" + name + '}';
     }
 
-    public Genre(String name){
+    public Genre(String name) {
         this.name = name;
     }
 }

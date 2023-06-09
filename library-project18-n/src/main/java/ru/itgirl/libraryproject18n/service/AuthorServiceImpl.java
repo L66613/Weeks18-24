@@ -31,7 +31,7 @@ public class AuthorServiceImpl implements AuthorService {
     public AuthorDto getAuthorById(Long id) {
         log.info("Try to find author by id {}", id);
         Optional<Author> author = authorRepository.findById(id);
-        if(author.isPresent()){
+        if (author.isPresent()) {
             AuthorDto authorDto = convertEntityToDto(author.get());
             log.info("Author: {}", authorDto.toString());
             return authorDto;
@@ -40,11 +40,7 @@ public class AuthorServiceImpl implements AuthorService {
             throw new NoSuchElementException("No value present");
         }
     }
-//    @Override
-//    public AuthorDto getAuthorByName(String name){
-//        Author author = authorRepository.findAuthorByName(name).orElseThrow();
-//        return convertToDto(author);
-//    }
+
     @Override
     public AuthorDto getAuthorByName(String name) {
         log.info("Try to find author by name {}, name");
@@ -58,11 +54,7 @@ public class AuthorServiceImpl implements AuthorService {
             throw new NoSuchElementException("No value found");
         }
     }
-//    @Override
-//    public AuthorDto getAuthorByNameSql(String name){
-//        Author author = authorRepository.findAuthorByNameSql(name).orElseThrow();
-//        return convertToDto(author);
-//    }
+
     @Override
     public AuthorDto getAuthorByNameSql(String name) {
         log.info("Try to find author by name {}, name");
@@ -76,46 +68,29 @@ public class AuthorServiceImpl implements AuthorService {
             throw new NoSuchElementException("Not value found");
         }
     }
-//    @Override
-//    public AuthorDto getAuthorByNameV2(String name) {
-//        Specification<Author> specification = Specification.where(new Specification<Author>() {
-//            @Override
-//            public Predicate toPredicate(Root<Author> root,
-//                                         CriteriaQuery<?> query,
-//                                         CriteriaBuilder criteriaBuilder) {
-//                return criteriaBuilder.equal(root.get("name"), name);
-//            }
-//        });
-//        Author author = authorRepository.findOne(specification).orElseThrow();
-//        return convertToDto(author);
-//    }
+
     @Override
     public AuthorDto getAuthorByNameV2(String name) {
         Specification<Author> specification = Specification.where(new Specification<Author>() {
             @Override
             public Predicate toPredicate(Root<Author> root,
-                                        CriteriaQuery<?> query,
-                                        CriteriaBuilder criteriaBuilder) {
+                                         CriteriaQuery<?> query,
+                                         CriteriaBuilder criteriaBuilder) {
                 return criteriaBuilder.equal(root.get("name"), name);
             }
         });
         log.info("Try to find author by name {}", name);
         Optional<Author> author = authorRepository.findOne(specification);
-        if(author.isPresent()){
+        if (author.isPresent()) {
             AuthorDto authorDto = convertEntityToDto(author.get());
             log.info("Author: {}", name, authorDto.toString());
             return authorDto;
-        }else{
+        } else {
             log.error("Author with name {} not found", name);
             throw new IllegalStateException("Author not found");
         }
     }
-//    @Override
-//    public AuthorDto createAuthor(AuthorCreateDto authorCreateDto) {
-//        Author author = authorRepository.save(convertDtoToEntity(authorCreateDto));
-//        AuthorDto authorDto = convertEntityToDto(author);
-//        return authorDto;
-//    }
+
 
     @Override
     public AuthorDto createAuthor(AuthorCreateDto authorCreateDto) {
@@ -126,15 +101,7 @@ public class AuthorServiceImpl implements AuthorService {
         return authorDto;
     }
 
-//    @Override
-//    public AuthorDto updateAuthor(AuthorUpdateDto authorUpdateDto) {
-//        Author author = authorRepository.findById(authorUpdateDto.getId()).orElseThrow();
-//        author.setName(authorUpdateDto.getName());
-//        author.setSurname(authorUpdateDto.getSurname());
-//        Author savedAuthor = authorRepository.save(author);
-//        AuthorDto authorDto = convertEntityToDto(savedAuthor);
-//        return authorDto;
-//    }
+
     @Override
     public AuthorDto updateAuthor(AuthorUpdateDto authorUpdateDto) {
         log.info("Try to update an author");
@@ -147,23 +114,19 @@ public class AuthorServiceImpl implements AuthorService {
             AuthorDto authorDto = convertEntityToDto(savedAuthor);
             log.info("Author: {}", " updated to " + authorUpdateDto);
             return authorDto;
-        }else {
+        } else {
             log.error("Author with this id not found");
             throw new NoSuchElementException("No value present");
         }
     }
-//    @Override
-//    public List<AuthorDto> getAllAuthors() {
-//        List<Author> authors = authorRepository.findAll();
-//        return authors.stream().map(this::convertEntityToDto).collect(Collectors.toList());
-//    }
+
     @Override
     public List<AuthorDto> getAllAuthors() {
         log.info("Try to get all authors");
         List<Author> authors = authorRepository.findAll();
-        if (authors != null){
+        if (authors != null) {
             return authors.stream().map(this::convertEntityToDto).collect(Collectors.toList());
-        }else{
+        } else {
             log.error("Authors not found");
             throw new NoSuchElementException("No value present");
         }
@@ -174,12 +137,14 @@ public class AuthorServiceImpl implements AuthorService {
         log.info("Try to delete an author by id {}", id);
         authorRepository.deleteById(id);
     }
+
     private Author convertDtoToEntity(AuthorCreateDto authorCreateDto) {
         return Author.builder()
                 .name(authorCreateDto.getName())
                 .surname(authorCreateDto.getSurname())
                 .build();
     }
+
     private AuthorDto convertEntityToDto(Author author) {
         List<BookDto> bookDtoList = null;
         if (author.getBooks() != null) {

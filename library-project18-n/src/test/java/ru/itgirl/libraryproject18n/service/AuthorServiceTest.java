@@ -26,7 +26,7 @@ public class AuthorServiceTest {
     AuthorServiceImpl authorService;
 
     @Test
-    public void testGetAuthorById(){
+    public void testGetAuthorById() {
         Long id = 1L;
         String name = "John";
         String surname = "Doe";
@@ -44,7 +44,7 @@ public class AuthorServiceTest {
     }
 
     @Test
-    public void testGetAuthorByName(){
+    public void testGetAuthorByName() {
         Long id = 1L;
         String name = "John";
         String surname = "Doe";
@@ -62,7 +62,7 @@ public class AuthorServiceTest {
     }
 
     @Test
-    public void testGetAuthorByNameNotFound(){
+    public void testGetAuthorByNameNotFound() {
         String name = "John";
         when(authorRepository.findAuthorByName(name)).thenReturn(Optional.empty());
 
@@ -71,7 +71,7 @@ public class AuthorServiceTest {
     }
 
     @Test
-    public void testGetAuthorByNameSql(){
+    public void testGetAuthorByNameSql() {
         Long id = 1L;
         String name = "John";
         String surname = "Doe";
@@ -86,8 +86,9 @@ public class AuthorServiceTest {
         Assertions.assertEquals(authorDto.getName(), author.getName());
         Assertions.assertEquals(authorDto.getSurname(), author.getSurname());
     }
+
     @Test
-    public void testGetAuthorByNameSqlNotFound(){
+    public void testGetAuthorByNameSqlNotFound() {
         String name = "John";
         when(authorRepository.findAuthorByNameSql(name)).thenReturn(Optional.empty());
 
@@ -96,7 +97,7 @@ public class AuthorServiceTest {
     }
 
     @Test
-    public void testGetAllAuthors(){
+    public void testGetAllAuthors() {
         Long id = 1L;
         String name = "John";
         String surname = "Doe";
@@ -116,7 +117,7 @@ public class AuthorServiceTest {
     }
 
     @Test
-    public void testCreateAuthor(){
+    public void testCreateAuthor() {
         AuthorCreateDto authorCreation = new AuthorCreateDto("John", "Doe");
         Set<Book> books = new HashSet<>();
         Author author = new Author(1L, authorCreation.getName(), authorCreation.getSurname(), books);
@@ -134,7 +135,7 @@ public class AuthorServiceTest {
     }
 
     @Test
-    public void testUpdateAuthor(){
+    public void testUpdateAuthor() {
         Long id = 1L;
         String name = "John";
         String surname = "Doe";
@@ -154,7 +155,7 @@ public class AuthorServiceTest {
     }
 
     @Test
-    public void testDeleteAuthor(){
+    public void testDeleteAuthor() {
         Long id = 1L;
 
         authorService.deleteAuthor(id);

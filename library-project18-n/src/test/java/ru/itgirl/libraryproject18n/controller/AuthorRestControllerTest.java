@@ -2,8 +2,6 @@ package ru.itgirl.libraryproject18n.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -32,7 +30,7 @@ public class AuthorRestControllerTest {
     AuthorService authorService;
 
     @Test
-    public void testGetAuthorById() throws Exception{
+    public void testGetAuthorById() throws Exception {
         Long authorId = 1L;
         AuthorDto authorDto = new AuthorDto();
         authorDto.setId(authorId);
@@ -47,7 +45,7 @@ public class AuthorRestControllerTest {
     }
 
     @Test
-    public void testGetAuthorByName() throws Exception{
+    public void testGetAuthorByName() throws Exception {
         String authorName = "Александр";
         AuthorDto authorDto = new AuthorDto();
         authorDto.setId(1L);
@@ -62,7 +60,7 @@ public class AuthorRestControllerTest {
     }
 
     @Test
-    public void testGetAuthorByNameSql() throws Exception{
+    public void testGetAuthorByNameSql() throws Exception {
         String authorName = "Александр";
         AuthorDto authorDto = new AuthorDto();
         authorDto.setId(1L);
@@ -77,7 +75,7 @@ public class AuthorRestControllerTest {
     }
 
     @Test
-    public void testGetAuthorByNameV2() throws Exception{
+    public void testGetAuthorByNameV2() throws Exception {
         String authorName = "Александр";
         AuthorDto authorDto = new AuthorDto();
         authorDto.setId(1L);
@@ -92,7 +90,7 @@ public class AuthorRestControllerTest {
     }
 
     @Test
-    public void testCreateAuthor() throws Exception{
+    public void testCreateAuthor() throws Exception {
         AuthorCreateDto authorCreation = new AuthorCreateDto();
         authorCreation.setName("John");
         authorCreation.setSurname("Doe");
@@ -107,7 +105,7 @@ public class AuthorRestControllerTest {
     }
 
     @Test
-    public void testUpdateAuthor() throws Exception{
+    public void testUpdateAuthor() throws Exception {
         Long authorId = 1L;
         String name = "John";
         String surname = "Doe";
@@ -128,7 +126,7 @@ public class AuthorRestControllerTest {
     }
 
     @Test
-    public void testDeleteAuthor() throws Exception{
+    public void testDeleteAuthor() throws Exception {
         Long id = 1L;
         mockMvc.perform(MockMvcRequestBuilders.delete("/author/delete/{id}", id))
                 .andExpect(status().isOk());

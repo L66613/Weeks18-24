@@ -13,7 +13,7 @@ public class AuthorController {
     private final AuthorService authorService;
 
     @GetMapping("/authors")
-    String getAuthorView(Model model){
+    String getAuthorView(Model model) {
         model.addAttribute("authors", authorService.getAllAuthors());
         return "authors";
     }

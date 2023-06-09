@@ -17,6 +17,7 @@ import java.util.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
 @SpringBootTest
 public class BookServiceTest {
 
@@ -47,7 +48,7 @@ public class BookServiceTest {
     }
 
     @Test
-    public void testGetByNameV1NotFound(){
+    public void testGetByNameV1NotFound() {
         String name = "The Witcher";
         when(bookRepository.findBookByName(name)).thenReturn(Optional.empty());
 
@@ -56,7 +57,7 @@ public class BookServiceTest {
     }
 
     @Test
-    public void testGetByNameV2(){
+    public void testGetByNameV2() {
         Long id = 1L;
         String name = "The Witcher";
         Genre genre = new Genre();
@@ -73,7 +74,7 @@ public class BookServiceTest {
     }
 
     @Test
-    public void testGetByNameV2NotFound(){
+    public void testGetByNameV2NotFound() {
         String name = "The Witcher";
         when(bookRepository.findBookByNameBySql(name)).thenReturn(Optional.empty());
 
@@ -82,7 +83,7 @@ public class BookServiceTest {
     }
 
     @Test
-    public void testCreateBook(){
+    public void testCreateBook() {
         Genre genre = new Genre("Fantasy");
         GenreCreateDto genreCreateDto = new GenreCreateDto("Fantasy");
         BookCreateDto bookCreation = new BookCreateDto("The Witcher", genre);
@@ -101,7 +102,7 @@ public class BookServiceTest {
     }
 
     @Test
-    public void testGetAllBooks(){
+    public void testGetAllBooks() {
         Long id = 1L;
         String name = "The Witcher";
         Genre genre = new Genre();
@@ -120,7 +121,7 @@ public class BookServiceTest {
     }
 
     @Test
-    public void testUpdateBook(){
+    public void testUpdateBook() {
         Long id = 1L;
         String name = "The Witcher";
         Genre genre = new Genre("Fantasy");
@@ -142,7 +143,7 @@ public class BookServiceTest {
     }
 
     @Test
-    public void testDeleteBook(){
+    public void testDeleteBook() {
         Long id = 1L;
 
         bookService.deleteBook(id);

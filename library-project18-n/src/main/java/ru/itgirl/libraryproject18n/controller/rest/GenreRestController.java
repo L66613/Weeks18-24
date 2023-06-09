@@ -12,7 +12,7 @@ public class GenreRestController {
     private final GenreService genreService;
 
     @GetMapping("/genre/{id}")
-    GenreWithBookInfoDto getGenreById(@PathVariable("id") Long id){
+    GenreWithBookInfoDto getGenreById(@PathVariable("id") Long id) {
         return genreService.getGenreById(id);
     }
 }

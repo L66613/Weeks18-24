@@ -29,51 +29,35 @@ public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
 
     private final GenreRepository genreRepository;
+
     @Override
     public BookDto getByNameV1(String name) {
         log.info("Try to find a book by name {}", name);
         Optional<Book> book = bookRepository.findBookByName(name);
-        if(book.isPresent()){
+        if (book.isPresent()) {
             BookDto bookDto = convertEntityToDto(book.get());
             log.info("Book: {}", bookDto.toString());
             return bookDto;
-        }else{
+        } else {
             log.error("Book with name {} not found", name);
             throw new NoSuchElementException(name);
         }
     }
-//    @Override
-//    public BookDto getByNameV2(String name) {
-//        Book book = bookRepository.findBookByNameBySql(name).orElseThrow();
-//        return convertEntityToDto(book);
-//    }
+
     @Override
     public BookDto getByNameV2(String name) {
         log.info("Try to find a book by name {}", name);
         Optional<Book> book = bookRepository.findBookByNameBySql(name);
-        if(book.isPresent()){
+        if (book.isPresent()) {
             BookDto bookDto = convertEntityToDto(book.get());
             log.info("Book: {}", bookDto.toString());
             return bookDto;
-        }else{
+        } else {
             log.error("Book with name {} not found", name);
             throw new NoSuchElementException(name);
         }
     }
-//    @Override
-//    public BookDto getByNameV3(String name) {
-//        Specification<Book> specification = Specification.where(new Specification<Book>() {
-//            @Override
-//            public Predicate toPredicate(Root<Book> root,
-//                                         CriteriaQuery<?> query,
-//                                         CriteriaBuilder cb) {
-//                return cb.equal(root.get("name"), name);
-//            }
-//        });
-//
-//        Book book = bookRepository.findOne(specification).orElseThrow();
-//        return convertEntityToDto(book);
-//    }
+
     @Override
     public BookDto getByNameV3(String name) {
         Specification<Book> specification = Specification.where(new Specification<Book>() {
@@ -86,30 +70,16 @@ public class BookServiceImpl implements BookService {
         });
         log.info("Try to find a book be name {}", name);
         Optional<Book> book = bookRepository.findOne(specification);
-        if (book.isPresent()){
+        if (book.isPresent()) {
             BookDto bookDto = convertEntityToDto(book.get());
             log.info("Book: {}", bookDto.toString());
             return bookDto;
-        }else {
+        } else {
             log.error("Author with name {} not found", name);
             throw new NoSuchElementException("No value present");
         }
     }
-//    @Override
-//    public BookDto createBook(BookCreateDto bookCreateDto){
-//        Genre genre = genreRepository.findGenreByName(bookCreateDto.getGenre().getName());
-//        if(genre == null){
-//            genre = new Genre(bookCreateDto.getGenre().getName());
-//            genre = genreRepository.save(genre);
-//        }
-//        Book book = Book.builder()
-//                .name(bookCreateDto.getName())
-//                .genre(genre)
-//                .build();
-//        book = bookRepository.save(book);
-//        BookDto bookDto = convertEntityToDto(book);
-//        return bookDto;
-//    }
+
     @Override
     public BookDto createBook(BookCreateDto bookCreateDto) {
         Genre genre = genreRepository.findGenreByName(bookCreateDto.getGenre().getName());
@@ -127,70 +97,48 @@ public class BookServiceImpl implements BookService {
         return bookDto;
     }
 
-//    @Override
-//    public List<BookDto> getAllBooks() {
-//        List<Book> books = bookRepository.findAll();
-//        return books.stream().map(this::convertEntityToDto).collect(Collectors.toList());
-//    }
+
     @Override
     public List<BookDto> getAllBooks() {
         log.info("Try to get all books");
         List<Book> books = bookRepository.findAll();
-        if (books != null){
+        if (books != null) {
             return books.stream().map(this::convertEntityToDto).collect(Collectors.toList());
-        }else{
+        } else {
             log.error("Books not found");
             throw new NoSuchElementException("No value present");
         }
     }
-//    @Override
-//    public BookDto updateBook(BookUpdateDto bookUpdateDto){
-//        Genre genre = genreRepository.findGenreByName(bookUpdateDto.getGenre());
-//        if (genre == null){
-//            genre = Genre.builder()
-//                    .name(bookUpdateDto.getGenre())
-//                    .build();
-//            genre = genreRepository.save(genre);
-//        }
-//        Book book = bookRepository.findBookById(bookUpdateDto.getId()).orElseThrow();
-//        book.setName(bookUpdateDto.getName());
-//        book.setGenre(genre);
-//        Book savedBook = bookRepository.save(book);
-//        BookDto bookDto = convertEntityToDto(savedBook);
-//        return bookDto;
-//    }
+
 
     @Override
-    public BookDto updateBook(BookUpdateDto bookUpdateDto){
+    public BookDto updateBook(BookUpdateDto bookUpdateDto) {
         log.info("Try to update a book by id");
         Genre genre = genreRepository.findGenreByName(bookUpdateDto.getGenre());
-            if (genre == null) {
-                genre = Genre.builder()
-                        .name(bookUpdateDto.getGenre())
-                        .build();
-                genre = genreRepository.save(genre);
-            }
+        if (genre == null) {
+            genre = Genre.builder()
+                    .name(bookUpdateDto.getGenre())
+                    .build();
+            genre = genreRepository.save(genre);
+        }
 
         Optional<Book> book = bookRepository.findById(bookUpdateDto.getId());
-            if(book.isPresent()){
-                book.get().setName(bookUpdateDto.getName());
-                book.get().setGenre(genre);
+        if (book.isPresent()) {
+            book.get().setName(bookUpdateDto.getName());
+            book.get().setGenre(genre);
             Book savedBook = bookRepository.save(book.get());
             BookDto bookDto = convertEntityToDto(savedBook);
-                log.info("Book with id {}", book.get().getId() + " updated to: " + bookUpdateDto.getName());
+            log.info("Book with id {}", book.get().getId() + " updated to: " + bookUpdateDto.getName());
             return bookDto;
-        }else {
+        } else {
             log.error("Book with this id not found");
             throw new NoSuchElementException("No value present");
         }
     }
 
-//    @Override
-//    public void deleteBook(Long id){
-//        bookRepository.deleteById(id);
-//    }
+
     @Override
-    public void deleteBook(Long id){
+    public void deleteBook(Long id) {
         log.info("Try to delete a book by id {}", id);
         bookRepository.deleteById(id);
     }

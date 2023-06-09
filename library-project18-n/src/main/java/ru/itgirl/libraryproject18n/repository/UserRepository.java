@@ -7,5 +7,5 @@ import ru.itgirl.libraryproject18n.model.User;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
-    Optional<User> findAUserByRole (String role);
+    Optional<User> findAUserByRole(String role);
 }
